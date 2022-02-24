@@ -1,0 +1,15 @@
+Left boundary: 
+0.0	0.0
+100.0	0.0
+0.0	0.0
+100.0	0.0
+
+0.0	0.0
+100.0	0.0
+0.0	0.0
+100.0	0.0
+
+
+Initial condition= 100.0 
+Coefficient of thermal conductivity: 1.0 
+Geometry: Length = 10.0 
