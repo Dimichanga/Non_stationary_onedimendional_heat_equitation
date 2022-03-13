@@ -27,7 +27,7 @@ def conductivity (str1, str2, str3, onedimens = geometry, Left = Boundary, Right
 
     flag = True 
     while flag:
-        numb = int(input("Enter the number of steps in the space(by default enter 11): "))
+        numb = int(input("Enter the number of steps in the space(by default enter 10): "))
         tau = float(input("Enter time step for the calculation (by default enter 0.5): "))
         h = (onedimens.length / numb) 
         if tau <= (h**2) / (2*coef): 
@@ -38,11 +38,11 @@ def conductivity (str1, str2, str3, onedimens = geometry, Left = Boundary, Right
     Nl=len(Left.table)
     Nr=len(Right.table)
     k = 0
-    u=[None] * (numb)
-    u_=[None] * (numb)
-    alpha = [None] * (numb)
-    beta = [None] * (numb)
-    gamma = [None] * (numb)
+    u=[None] * (numb+1)
+    u_=[None] * (numb+1)
+    alpha = [None] * (numb+1)
+    beta = [None] * (numb+1)
+    gamma = [None] * (numb+1)
         
     if Left.table[Nl-1][0] > Right.table[Nr-1][0]:
         times.duration = Left.table[Nl-1][0]
@@ -55,20 +55,20 @@ def conductivity (str1, str2, str3, onedimens = geometry, Left = Boundary, Right
     times.set_n()
         
     u[0] = Left.table[0][1]
-    u[numb-1] = Right.table[0][1]
-    for i in range(1,numb-1):
+    u[numb] = Right.table[0][1]
+    for i in range(1,numb):
             u[i] = initcond
 
     
     book = openpyxl.Workbook()
     sheet = book.active
     sheet.cell(row = 1, column = 1).value = 't/x' 
-    for i in range (numb):
+    for i in range (numb+1):
         sheet.cell(row = 1, column = i+2).value = (onedimens.length / numb) * i
 
         
     sheet.cell(row = 2, column = 1).value = times.actual
-    for i in range (numb):
+    for i in range (numb+1):
         sheet.cell(row = 2, column = i+2).value = u[i]
         
        
@@ -77,12 +77,12 @@ def conductivity (str1, str2, str3, onedimens = geometry, Left = Boundary, Right
 
         if k == times.n:
             sheet.cell(row = count + 2, column = 1).value = times.actual
-            for i in range (numb):
+            for i in range (numb+1):
                 sheet.cell(row = count+2, column = i+2).value = u[i]
             count += 1
             k = 0
 
-        for i in range (numb):
+        for i in range (numb+1):
             u_[i] = u[i]
         
         A = (-coef * tau) / (h**2)
@@ -90,28 +90,28 @@ def conductivity (str1, str2, str3, onedimens = geometry, Left = Boundary, Right
         C = A
         times.actual += times.step
         u[0] = Left.get(times.actual)
-        u[numb-1] = Right.get(times.actual)
+        u[numb] = Right.get(times.actual)
         gamma [1] = B
         alpha[1] = -C / gamma[1]
         beta[1] = (u_[1] - A*u[0]) / gamma[1]
 
-        for i in range (2,numb-1):
+        for i in range (2,numb):
             gamma[i] = B + A * alpha[i-1]
-            if i != numb-2:
+            if i != numb-1:
                 beta[i] = (u_[i] - A*beta[i-1]) / gamma[i]
                 alpha[i] = -C / gamma[i]
             else:
-                beta[i] = (u_[i] - A*u[numb-1] - A*beta[i-1]) / gamma[i]
+                beta[i] = (u_[i] - A*u[numb] - A*beta[i-1]) / gamma[i]
                 alpha[i] = 0
         
-        u[numb-2] = beta[numb-2]
-        for i in range (numb-3,0,-1):
+        u[numb-1] = beta[numb-1]
+        for i in range (numb-2,0,-1):
             u[i] = alpha[i] * u[i+1] + beta[i]
 
         k += 1
 
     sheet.cell(row = count + 3, column = 1).value = times.actual
-    for i in range(numb):
+    for i in range(numb+1):
         sheet.cell(row = count+3, column = i+2).value = u[i]
 
     book.save("Solution of the equation.xlsx")
