@@ -33,12 +33,19 @@ class time_:
         self.n = self.output / self.step #coef for output of data
 
 class geometry:
-    def __init__(self, length=0):
+    def __init__(self, length=0, radius1=0, radius2=0):
         self.length = length 
+        self.radius1 = radius1
+        self.radius2 = radius2
 
-    def set_geometry(self, str):
+    def set_length(self, str):
         with open(str, "r") as f:
             self.length = float(f.read())
+
+    def set_radius(self,str):
+        with open (str, "r") as f:
+            self.radius1 = float(f.read())
+            self.radius2 = float(f.read())
 
     def get_geometry(self):
         return self.lenght

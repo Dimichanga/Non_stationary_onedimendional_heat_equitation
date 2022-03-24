@@ -1,5 +1,5 @@
 from classes import Boundary, time_, geometry
-from calculation import conductivity
+from calculation_flat import conductivity_flat
 
 
 left = Boundary()
@@ -9,9 +9,7 @@ tim = time_()
 
 left.set_boundary("Left.txt")
 right.set_boundary("Right.txt")
-onedimens.set_geometry("Geometry.txt")
-print(right.table[0][1])
-print(onedimens.length)
+onedimens.set_length("Geometry.txt")
 
-conductivity("initial_condition.txt", "coef.txt", "output.txt", onedimens, left, right, tim)
+conductivity_flat("initial_condition.txt", "coef.txt", "output.txt", onedimens, left, right, tim)
 
