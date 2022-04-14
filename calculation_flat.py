@@ -1,13 +1,12 @@
 from classes import time_, geometry, Boundary 
 import openpyxl
 
-def conductivity_flat (str1, str2, str3, onedimens = geometry, Left = Boundary, Right = Boundary, times = time_):
+def conductivity_flat (str1, str2, str3, onedimens, Left, Right, times):
 
     with open (str1,'r') as f:
         initcond = float(f.read())
     with open (str2, "r") as f:
         coef = float(f.read())
-
     with open (str3, "w") as f:
         f.write("Left boundary: \n")
         for i in range(len(Left.table)):
@@ -16,7 +15,7 @@ def conductivity_flat (str1, str2, str3, onedimens = geometry, Left = Boundary, 
             f.write(str(Left.table[i][1]))
             f.write('\n')
     with open (str3, "a") as f:
-        f.write('\n')
+        f.write("Right boundary: \n")
         for i in range(len(Left.table)):
             f.write(str(Right.table[i][0]) +'\t')
             f.write(str(Right.table[i][1]) +'\n')
@@ -33,7 +32,7 @@ def conductivity_flat (str1, str2, str3, onedimens = geometry, Left = Boundary, 
         if tau <= (h**2) / (2*coef): 
             flag = False 
         else:
-            print("Error! Stability condition is not met")
+            print("Error! Stability condition is not met") 
 
     Nl=len(Left.table)
     Nr=len(Right.table)
@@ -64,7 +63,7 @@ def conductivity_flat (str1, str2, str3, onedimens = geometry, Left = Boundary, 
     sheet = book.active
     sheet.cell(row = 1, column = 1).value = 't/x' 
     for i in range (numb+1):
-        sheet.cell(row = 1, column = i+2).value = (onedimens.length / numb) * i
+        sheet.cell(row = 1, column = i+2).value = h * i
 
         
     sheet.cell(row = 2, column = 1).value = times.actual
@@ -114,5 +113,5 @@ def conductivity_flat (str1, str2, str3, onedimens = geometry, Left = Boundary, 
     for i in range(numb+1):
         sheet.cell(row = count+3, column = i+2).value = u[i]
 
-    book.save("Solution of the equation.xlsx")
+    book.save("Solution of the equation flat.xlsx")
     book.close()
