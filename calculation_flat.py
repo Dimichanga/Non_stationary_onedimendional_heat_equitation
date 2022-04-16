@@ -100,7 +100,7 @@ def conductivity_flat (str1, str2, str3, onedimens, Left, Right, times):
                 beta[i] = (u_[i] - A*beta[i-1]) / gamma[i]
                 alpha[i] = -C / gamma[i]
             else:
-                beta[i] = (u_[i] - A*u[numb] - A*beta[i-1]) / gamma[i]
+                beta[i] = (u_[i] - C*u[numb] - A*beta[i-1]) / gamma[i]
                 alpha[i] = 0
         
         u[numb-1] = beta[numb-1]

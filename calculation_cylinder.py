@@ -45,7 +45,7 @@ def conductivity_cylinder (str1, str2, str3, onedimens, R1, R2, times):
     gamma = [None] * (numb+1)
         
     if R1.table[N1-1][0] > R2.table[N2-1][0]:
-        times.duration = Left.table[N1-1][0]
+        times.duration = R1.table[N1-1][0]
     else:
         times.duration = R2.table[N2-1][0]
     times.set_step(tau)
@@ -89,9 +89,9 @@ def conductivity_cylinder (str1, str2, str3, onedimens, R1, R2, times):
         u[numb] = R2.get(times.actual)
 
         for i in range (1,numb):
-            A = ((-coef * tau) / ((h**2)*(onedimens.radius1 + h*i))) * ((onedimens.radius1 + h*(i-2) + onedimens.radius1 + h*(i-1)) / 2)
-            B = 1 + (tau * coef/((h**2)*(onedimens.radius1 + h*i))) * ((onedimens.radius1 + h*(i-2) + 2*(onedimens.radius1 + h*(i-1)) + onedimens.radius1 + h*(i)) / 2)
-            C = ((-coef * tau) / ((h**2)*(onedimens.radius1 + h*i))) * ((onedimens.radius1 + h*(i) + onedimens.radius1 + h*(i-1)) / 2)
+            A = ((-coef * tau) / ((h**2)*(onedimens.radius1 + h*(i-1)))) * ((onedimens.radius1 + h*(i-2) + onedimens.radius1 + h*(i-1)) / 2)
+            B = 1 + (tau * coef/((h**2)*(onedimens.radius1 + h*(i-1)))) * ((onedimens.radius1 + h*(i-2) + 2*(onedimens.radius1 + h*(i-1)) + onedimens.radius1 + h*(i)) / 2)
+            C = ((-coef * tau) / ((h**2)*(onedimens.radius1 + h*(i-1)))) * ((onedimens.radius1 + h*(i) + onedimens.radius1 + h*(i-1)) / 2)
             if i != numb-1 and i != 1:
                 gamma[i] = B + A * alpha[i-1]
                 beta[i] = (u_[i] - A*beta[i-1]) / gamma[i]
@@ -102,7 +102,7 @@ def conductivity_cylinder (str1, str2, str3, onedimens, R1, R2, times):
                 beta[i] = (u_[i] - A*u[0]) / gamma[i]
             else:
                 gamma[i] = B + A * alpha[i-1]
-                beta[i] = (u_[i] - A*u[numb] - A*beta[i-1]) / gamma[i]
+                beta[i] = (u_[i] - C * u[numb] - A*beta[i-1]) / gamma[i]
                 alpha[i] = 0
         
         u[numb-1] = beta[numb-1]
