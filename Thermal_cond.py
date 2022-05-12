@@ -22,3 +22,4 @@ elif shape == 'cylinder':
     onedimens.set_radius2("radius2.txt")
     conductivity_cylinder("initial_condition.txt", "coef.txt", "output.txt", onedimens, left, right, tim)
 
+

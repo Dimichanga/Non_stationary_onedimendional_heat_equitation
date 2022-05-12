@@ -64,3 +64,4 @@ class TDMA:
         self.alpha = alpha
         self.beta = beta
         self.gamma = gamma
+

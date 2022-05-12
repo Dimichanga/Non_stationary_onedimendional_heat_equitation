@@ -1,15 +1,12 @@
-Left boundary: 
-0.0	0.0
-100.0	0.0
-0.0	0.0
-100.0	0.0
-Right boundary: 
-0.0	0.0
-100.0	0.0
-0.0	0.0
-100.0	0.0
+R1 boundary: 
+0	100
+R2 boundary: 
+0.0	30.0
+100.0	30.0
+500.0	30.0
 
 
 Initial condition= 100.0 
 Coefficient of thermal conductivity: 1.0 
-Geometry: Length = 10.0 
+Geometry: Raduis1 = 10.0 
+ Raduis2 = 20.0 

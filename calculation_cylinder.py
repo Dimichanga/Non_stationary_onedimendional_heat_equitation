@@ -1,5 +1,6 @@
 from classes import time_, geometry, Boundary 
 import openpyxl
+import math
 
 def conductivity_cylinder (str1, str2, str3, onedimens, R1, R2, times):
 
@@ -7,7 +8,7 @@ def conductivity_cylinder (str1, str2, str3, onedimens, R1, R2, times):
         initcond = float(f.read())
     with open (str2, "r") as f:
         coef = float(f.read())
-
+    
     with open (str3, "w") as f:
         f.write("R1 boundary: \n")
         for i in range(len(R1.table)):
@@ -89,9 +90,9 @@ def conductivity_cylinder (str1, str2, str3, onedimens, R1, R2, times):
         u[numb] = R2.get(times.actual)
 
         for i in range (1,numb):
-            A = ((-coef * tau) / ((h**2)*(onedimens.radius1 + h*(i-1)))) * ((onedimens.radius1 + h*(i-2) + onedimens.radius1 + h*(i-1)) / 2)
-            B = 1 + (tau * coef/((h**2)*(onedimens.radius1 + h*(i-1)))) * ((onedimens.radius1 + h*(i-2) + 2*(onedimens.radius1 + h*(i-1)) + onedimens.radius1 + h*(i)) / 2)
-            C = ((-coef * tau) / ((h**2)*(onedimens.radius1 + h*(i-1)))) * ((onedimens.radius1 + h*(i) + onedimens.radius1 + h*(i-1)) / 2)
+            A =  -(2*coef*tau)/(math.log((onedimens.radius1 + h*i)/(onedimens.radius1 + h*(i-1))) * (math.pow(onedimens.radius1 + h*i + (h/2), 2) - math.pow(onedimens.radius1 + h*i - (h/2), 2))) 
+            B = (2*coef*tau)/(math.log((onedimens.radius1 + h*i)/(onedimens.radius1 + h*(i-1))) * (math.pow(onedimens.radius1 + h*i + (h/2), 2) - math.pow(onedimens.radius1 + h*i - (h/2), 2))) + (2*coef*tau)/(math.log((onedimens.radius1 + h*(i+1))/(onedimens.radius1 +h*i)) * (math.pow(onedimens.radius1 + h*i + (h/2), 2) - math.pow(onedimens.radius1 + h*i - (h/2), 2))) + 1
+            C =  -(2*coef*tau)/(math.log((onedimens.radius1 + h*(i+1))/(onedimens.radius1 +h*i)) * (math.pow(onedimens.radius1 + h*i + (h/2), 2) - math.pow(onedimens.radius1 + h*i - (h/2), 2)))
             if i != numb-1 and i != 1:
                 gamma[i] = B + A * alpha[i-1]
                 beta[i] = (u_[i] - A*beta[i-1]) / gamma[i]
@@ -117,3 +118,4 @@ def conductivity_cylinder (str1, str2, str3, onedimens, R1, R2, times):
 
     book.save("Solution of the equation cylinder.xlsx")
     book.close()
+
